@@ -1,6 +1,7 @@
 import { run } from "uebersicht";
 
 const darkskyApiKey = "";
+const units = "si";
 
 const opacity = "cc";
 const color = "#d6cccc" + opacity;
@@ -13,7 +14,6 @@ export const className = `
     margin: auto;
     padding: 20px 20px 20px;
     color: ${color};
-    text-shadow: 0px 0px 0px ${color};
     font-family: Andale Mono;
     font-size: 0.8em;
 
@@ -201,7 +201,7 @@ const fetchWeather = (dispatch) => {
         const lon = geo.position.coords.longitude;
 
         fetch(
-            `http://127.0.0.1:41417/https://api.darksky.net/forecast/${darkskyApiKey}/${lat},${lon}?units=si`
+            `http://127.0.0.1:41417/https://api.darksky.net/forecast/${darkskyApiKey}/${lat},${lon}?units=${units}`
         )
             .then((res) => res.json())
             .then((data) => {
