@@ -1,10 +1,20 @@
 import { run } from "uebersicht";
 
-const darkskyApiKey = "";
-const units = "si";
+const opwmApiKey = "";
+
+/**
+ * OpenWeatherMaps accepts three parameters here:
+ * 
+ * kelvin
+ * imperial
+ * metric
+ * 
+ * Default is: kelvin
+ */
+const units = "";
 
 const opacity = "cc";
-const color = "#d6cccc" + opacity;
+const color = "#ffffff" + opacity;
 const tintColor = "#e08201" + opacity;
 
 export const className = `
@@ -41,7 +51,7 @@ export const render = ({
     weather,
 }) => {
     const SystemSection = () => (
-        <div id="weather">
+        <div id="system">
             {" "}
             <div>
                 <b>┌ {hostname}</b>
@@ -103,15 +113,15 @@ export const render = ({
             </div>
             <div>
                 <b>│ Location: </b>
-                {weather && weather.city}
+                {weather.city}
             </div>
             <div>
                 <b>│ Weather Summary: </b>
-                {weather && weather.summary}
+                {weather.conditions}
             </div>
             <div>
                 <b>│ Temperature: </b>
-                {weather && weather.temperature + " °C"}
+                {weather.temp} °F
             </div>
         </div>
     );
@@ -201,14 +211,17 @@ const fetchWeather = (dispatch) => {
         const lon = geo.position.coords.longitude;
 
         fetch(
-            `http://127.0.0.1:41417/https://api.darksky.net/forecast/${darkskyApiKey}/${lat},${lon}?units=${units}`
+            `http://127.0.0.1:41417/https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${opwmApiKey}&lang=en`
         )
             .then((res) => res.json())
             .then((data) => {
+                let captalizeWord = text => text.toLowerCase().split(' ').map( (i, j) => i.charAt(0).toUpperCase()+i.slice(1)).join(' ')
+
                 return dispatch({
                     weather: {
-                        ...data.currently,
-                        city: geo.address.city,
+                        conditions: captalizeWord(data.weather[0].description),
+                        temp: data.main.temp,
+                        city: data.name,
                     },
                 });
             });
