@@ -121,7 +121,7 @@ export const render = ({
             </div>
             <div>
                 <b>│ Temperature: </b>
-                {weather.temp} °F
+                {weather.temp} °{units=="imperial" ? "F" : units=="kelvin" ? "K" : units=="metric" ? "C" : "K"}
             </div>
         </div>
     );
