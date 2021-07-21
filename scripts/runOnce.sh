@@ -27,7 +27,20 @@ get_os() {
         *)      codename=macOS ;;
     esac
 
-    distro="$codename $osx_version $osx_build $(uname -m)"
+    arch_name="$(uname -m)"
+    if [ "${arch_name}" = "x86_64" ]; then
+        if [ "$(sysctl -in sysctl.proc_translated)" = "1" ]; then
+            arch="arm64 (Rosetta 2)"
+        else
+            arch="x86_64 (Native)"
+        fi 
+    elif [ "${arch_name}" = "arm64" ]; then
+        arch="arm64"
+    else
+        arch="Unknown Arch: ${arch_name}"
+    fi
+
+    distro="$codename $osx_version $osx_build $arch"
     echo $distro
 }
 
